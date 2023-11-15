@@ -2072,14 +2072,12 @@ vendor/lib64/libtime_genoff.so
 vendor/bin/hw/vendor.xiaomi.hw.touchfeature@1.0-service
 vendor/bin/touch_report
 vendor/bin/toucheventcheck
-vendor/bin/touchsensor
 vendor/etc/init.panel_info.sh
 vendor/etc/init/vendor.xiaomi.hw.touchfeature@1.0-service.rc
 vendor/etc/vintf/manifest/vendor.xiaomi.hw.touchfeature@1.0-service.xml
 vendor/lib/hw/vendor.xiaomi.hw.touchfeature@1.0-impl.so
 vendor/lib/vendor.xiaomi.hw.touchfeature@1.0.so
 vendor/lib64/hw/vendor.xiaomi.hw.touchfeature@1.0-impl.so
-vendor/lib64/libtensorflowlite.so
 vendor/lib64/vendor.xiaomi.hw.touchfeature@1.0.so
 
 # Trusted Execution Environment connector
