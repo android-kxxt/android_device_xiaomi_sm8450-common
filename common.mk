@@ -504,7 +504,6 @@ PRODUCT_PACKAGES += \
     init.qcom.rc \
     init.qcom.sh \
     init.target.rc \
-    init.touch_report.rc \
     ueventd-odm.rc \
     ueventd.qcom.rc
 
