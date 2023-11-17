@@ -97,11 +97,13 @@ DEVICE_MATRIX_FILE := $(COMMON_PATH)/hidl/compatibility_matrix.xml
 
 DEVICE_MANIFEST_SKUS := \
     cape \
-    taro
+    taro \
+    ukee
 DEVICE_MANIFEST_CAPE_FILES := \
     $(COMMON_PATH)/hidl/manifest_taro.xml \
     $(COMMON_PATH)/hidl/manifest_xiaomi.xml
 DEVICE_MANIFEST_TARO_FILES := $(DEVICE_MANIFEST_CAPE_FILES)
+DEVICE_MANIFEST_UKEE_FILES := $(DEVICE_MANIFEST_CAPE_FILES)
 
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
     $(COMMON_PATH)/hidl/vendor_framework_compatibility_matrix.xml \
