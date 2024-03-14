@@ -95,6 +95,8 @@ class XiaomiSm8450UdfpsHander : public UdfpsHandler {
         touch_fd_ = android::base::unique_fd(open(TOUCH_DEV_PATH, O_RDWR));
         disp_fd_ = android::base::unique_fd(open(DISP_FEATURE_PATH, O_RDWR));
 
+        setFodStatus(FOD_STATUS_ON);
+
         // Thread to notify fingeprint hwmodule about fod presses
         std::thread([this]() {
             int fd = open(FOD_PRESS_STATUS_PATH, O_RDONLY);
@@ -224,16 +226,16 @@ class XiaomiSm8450UdfpsHander : public UdfpsHandler {
             setFingerDown(false);
 
             if (!enrolling) {
-                setFodStatus(FOD_STATUS_OFF);
+                // setFodStatus(FOD_STATUS_OFF);
             }
         }
 
-        /* vendorCode
+        /* vendorCode on goodix_fod devices:
          * 21: waiting for finger
          * 22: finger down
          * 23: finger up
          */
-        if (vendorCode == 21) {
+        if (vendorCode == 20 || vendorCode == 21) {
             setFodStatus(FOD_STATUS_ON);
         }
     }
@@ -242,7 +244,7 @@ class XiaomiSm8450UdfpsHander : public UdfpsHandler {
         LOG(INFO) << __func__;
         enrolling = false;
 
-        setFodStatus(FOD_STATUS_OFF);
+        // setFodStatus(FOD_STATUS_OFF);
     }
 
     void preEnroll() {
@@ -259,7 +261,7 @@ class XiaomiSm8450UdfpsHander : public UdfpsHandler {
         LOG(INFO) << __func__;
         enrolling = false;
 
-        setFodStatus(FOD_STATUS_OFF);
+        // setFodStatus(FOD_STATUS_OFF);
     }
 
   private:
