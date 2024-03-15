@@ -7,6 +7,7 @@
 #define LOG_TAG "UdfpsHandler.xiaomi_sm8450"
 
 #include <android-base/logging.h>
+#include <android-base/properties.h>
 #include <android-base/unique_fd.h>
 
 #include <poll.h>
@@ -95,7 +96,9 @@ class XiaomiSm8450UdfpsHander : public UdfpsHandler {
         touch_fd_ = android::base::unique_fd(open(TOUCH_DEV_PATH, O_RDWR));
         disp_fd_ = android::base::unique_fd(open(DISP_FEATURE_PATH, O_RDWR));
 
-        setFodStatus(FOD_STATUS_ON);
+        std::string fpVendor = android::base::GetProperty("persist.vendor.sys.fp.vendor", "none");
+        LOG(INFO) << __func__ << " fingerprint vendor is " << fpVendor;
+        isFpcFod = fpVendor == "fpc_fod";
 
         // Thread to notify fingeprint hwmodule about fod presses
         std::thread([this]() {
@@ -226,7 +229,7 @@ class XiaomiSm8450UdfpsHander : public UdfpsHandler {
             setFingerDown(false);
 
             if (!enrolling) {
-                // setFodStatus(FOD_STATUS_OFF);
+                setFodStatus(FOD_STATUS_OFF);
             }
         }
 
@@ -235,16 +238,18 @@ class XiaomiSm8450UdfpsHander : public UdfpsHandler {
          * 22: finger down
          * 23: finger up
          */
-        if (vendorCode == 20 || vendorCode == 21) {
+        if (!isFpcFod && vendorCode == 21) {
             setFodStatus(FOD_STATUS_ON);
-        }
+        } else if (isFpcFod && vendorCode == 22) {
+            setFodStatus(FOD_STATUS_ON);
+	}
     }
 
     void cancel() {
         LOG(INFO) << __func__;
         enrolling = false;
 
-        // setFodStatus(FOD_STATUS_OFF);
+        setFodStatus(FOD_STATUS_OFF);
     }
 
     void preEnroll() {
@@ -261,7 +266,7 @@ class XiaomiSm8450UdfpsHander : public UdfpsHandler {
         LOG(INFO) << __func__;
         enrolling = false;
 
-        // setFodStatus(FOD_STATUS_OFF);
+        setFodStatus(FOD_STATUS_OFF);
     }
 
   private:
@@ -270,6 +275,7 @@ class XiaomiSm8450UdfpsHander : public UdfpsHandler {
     android::base::unique_fd disp_fd_;
     bool enrolling = false;
     uint32_t lastPressX, lastPressY;
+    bool isFpcFod;
 
     void setFodStatus(int value) {
         int buf[MAX_BUF_SIZE] = {MI_DISP_PRIMARY, Touch_Fod_Enable, value};
@@ -277,6 +283,10 @@ class XiaomiSm8450UdfpsHander : public UdfpsHandler {
     }
 
     void setFingerDown(bool pressed) {
+        if (isFpcFod) {
+            // fpc_fod sucks... This better happens before finger down.
+            setFodStatus(pressed ? FOD_STATUS_ON : FOD_STATUS_OFF);
+        }
         int buf[MAX_BUF_SIZE] = {MI_DISP_PRIMARY, THP_FOD_DOWNUP_CTL, pressed ? 1 : 0};
         ioctl(touch_fd_.get(), TOUCH_IOC_SET_CUR_VALUE, &buf);
     }
