@@ -187,6 +187,7 @@ qcom_smd.ko
 gh_irq_lend.ko
 gh_mem_notifier.ko
 gh_virtio_backend.ko
+gh_vm_loader.ko
 qcom-spmi-adc5.ko
 qcom-vadc-common.ko
 nvmem_qfprom.ko

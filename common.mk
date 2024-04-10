@@ -440,6 +440,13 @@ $(foreach sku, taro diwali cape ukee, \
 PRODUCT_PACKAGES += \
     vendor.qti.hardware.servicetracker@1.2.vendor
 
+# Virtualization
+$(call inherit-product, packages/modules/Virtualization/apex/product_packages.mk)
+PRODUCT_PACKAGES += \
+    vm \
+    virtualizationservice \
+    virtmgr
+
 # Soong
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
