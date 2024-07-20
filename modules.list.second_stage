@@ -64,8 +64,6 @@ cdsprm.ko
 fsa4480-i2c.ko
 msm_show_epoch.ko
 eud.ko
-guestvm_loader.ko
-hyp_core_ctl.ko
 qbt_handler.ko
 qcom_soc_wdt.ko
 sys_pm_vx.ko
